@@ -1,0 +1,4 @@
+package disbeauty
+
+func NewServer() {
+}
