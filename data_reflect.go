@@ -230,19 +230,20 @@ func DumpSimple(i interface{}) string {
 		return buffer.String()
 	case reflect.Struct:
 		buffer := bytes.NewBuffer(make([]byte, 0))
-		buffer.WriteString("(\n")
+		buffer.WriteString("{\n")
 		v := reflect.ValueOf(i)
 		for j := 0; j < v.NumField(); j++ {
 			buffer.WriteString("\t")
 			iv := v.Field(j)
-			buffer.WriteString(v.Type().Field(j).Name + ":\t")
-			buffer.WriteString(fmt.Sprintf("%v", iv.Interface()) + "\n")
+			buffer.WriteString(v.Type().Field(j).Name + ":" + iv.Type().Name() + "\n")
 		}
-		buffer.WriteString(")\n")
+		buffer.WriteString("}\n")
 		return buffer.String()
+	case reflect.Slice:
+		fallthrough
 	case reflect.Array:
-		return ""
+		return fmt.Sprintf("%s (len=%)d\n", t.Name(), len(i.([]interface{})))
 	default:
-		return fmt.Sprintf("%v", i)
+		return fmt.Sprintf("%+v\n", i)
 	}
 }
